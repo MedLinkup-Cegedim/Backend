@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, List
 
 from pydantic import BaseModel
 from pydantic import Field
@@ -31,7 +31,10 @@ user_id_type = Annotated[str, Field(
         title="User ID",
         description="ID of the user",
     )]
-
+case_type = Annotated[List[str], Field(
+        title="Cases List",
+        description="List of cases associated with the user",
+    )]
 
 class UserInSignup(BaseModel):
     email: email_type
@@ -49,8 +52,10 @@ class UserInLogin(BaseModel):
     email: email_type
     password: password_type
 
+class UserDB(UserInSignup):
+    cases: case_type = ["trial for a case"]
 
-class UserOut(UserInSignup):
+class UserOut(UserDB):
     id: user_id_type
 
 

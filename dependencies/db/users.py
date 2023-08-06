@@ -75,7 +75,7 @@ class UsersDriver:
 
     def create_user(self, user: users.UserInSignup) -> users.UserOut:
         try:
-            user_db = users.UserInSignup(last_password_update=datetime.utcnow(), **user.dict())
+            user_db = users.UserDB(last_password_update=datetime.utcnow(), **user.dict())
             inserted_id = self.collection.insert_one(user_db.dict()).inserted_id
             user_out = users.UserOut(**user_db.dict(), id=str(inserted_id))
             return user_out
