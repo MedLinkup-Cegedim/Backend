@@ -4,6 +4,7 @@ from fastapi import APIRouter, HTTPException, status, Body
 from dependencies.models.cases import Case, CaseOut
 from dependencies.db.users import UsersDriver
 from dependencies.db.cases import CasesDriver
+from dependencies.db.organization import OrganizationDriver
 from dependencies.token_handler import TokenHandler
 from fastapi.security import OAuth2PasswordBearer
 from dependencies.models.users import UserToken
@@ -16,7 +17,7 @@ router = APIRouter(
 )
 db_handler = CasesDriver()
 users_driver = UsersDriver()
-
+org_driver = OrganizationDriver()
 token_handler = TokenHandler()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user-auth/login")
 
@@ -65,3 +66,25 @@ async def add_case(
     user_in_db.cases.append(new_case_data)
     users_driver.edit_info(user.id, new_case_data)
     return db_handler.add_case(case)
+
+@router.get(
+    "/display-cases",
+    summary="Display cases",
+    description="This endpoint allows you to get all cases of patients",
+    response_model=List[CaseOut],
+    responses={
+        status.HTTP_200_OK: {
+            "description": "Cases retrieved successfully.",
+        },
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "User is not authorized",
+        },
+    }
+)
+async def display_cases(
+        token: Annotated[str, Depends(oauth2_scheme)],
+        org: UserToken = Depends(token_handler.get_user)
+     ):
+    org: UserToken = token_handler.get_user(token)
+    org_driver.handle_nonexistent_user(org.id)
+    return db_handler.display_cases()

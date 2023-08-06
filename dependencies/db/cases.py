@@ -28,3 +28,9 @@ class CasesDriver:
         except pydantic.ValidationError as e:
             raise HTTPException(detail="validation error", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                                 headers={"X-Error": str(e)})
+
+    def display_cases(self):
+        res = []
+        for case in self.collection:
+            res.append(case)
+        return res

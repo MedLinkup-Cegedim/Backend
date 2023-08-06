@@ -96,10 +96,3 @@ class UsersDriver:
         except mongo_errors.PyMongoError:
             raise HTTPException(detail="database error", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-# def get_last_password_update_time(self, user_id: str) -> datetime:
-    #     self.handle_nonexistent_user(user_id)
-    #     try:
-    #         return self.collection.find_one({"_id": convert_to_object_id(user_id)})["last_password_update"]
-    #     except mongo_errors.PyMongoError:
-    #         raise HTTPException(detail="database error", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    #

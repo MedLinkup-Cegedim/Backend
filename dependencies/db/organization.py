@@ -46,3 +46,11 @@ class OrganizationDriver:
             return users.OrgOut(**user, id=str(user["_id"]))
         except mongo_errors.PyMongoError:
             raise HTTPException(detail="database error", status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def handle_nonexistent_user(self, user_id: str):
+        if not self.user_exists(user_id):
+            raise HTTPException(detail="user not found", status_code=status.HTTP_404_NOT_FOUND)
+
+    def user_exists(self, user_id: str) -> bool:
+        user_id = convert_to_object_id(user_id)
+        return self.collection.find_one({"_id": user_id}) is not None
