@@ -19,7 +19,7 @@ class TokenHandler:
         self.secret_key = os.environ.get("JWT_SECRET_KEY")
         self.algorithm = "HS256"
 
-    def encode_token(self, user: users.UserToken, duration=24):
+    def encode_token(self, user: users.UserToken, duration=360):
         expiration_time = datetime.utcnow() + timedelta(hours=duration)
         start_time = datetime.utcnow().timestamp()
         payload = {"start": start_time, "exp": expiration_time, "id": user.id, "email": user.email}

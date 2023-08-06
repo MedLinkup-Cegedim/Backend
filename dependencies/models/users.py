@@ -67,3 +67,17 @@ class UserToken(BaseModel):
     id: user_id_type
     email: email_type
 
+#######################################
+
+class OrgInSignup(UserInSignup):
+    org_flag = 1
+
+class OrgDB(UserInSignup):
+    Organization_status: str = "active"
+
+class OrgOut(OrgDB):
+    id: user_id_type
+
+    class Config:
+        arbitrary_types_allowed = True
+
