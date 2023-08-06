@@ -34,11 +34,9 @@ class TokenHandler:
     def get_user(self, token) -> users.UserToken:
         try:
             payload = jwt.decode(token, self.secret_key, self.algorithm)
-            last_updated_time = users_driver.get_last_password_update_time(payload["id"])
             user = users.UserToken(**payload)
             expiration_time = datetime.fromtimestamp(payload["exp"])
-            start_time = datetime.fromtimestamp(payload["start"])
-            if datetime.utcnow() > expiration_time or start_time < last_updated_time:
+            if datetime.utcnow() > expiration_time:
                 raise HTTPException(detail="invalid token", status_code=status.HTTP_401_UNAUTHORIZED)
 
         except jwt.exceptions.DecodeError as e:

@@ -32,18 +32,20 @@ creation_date_type = Annotated[datetime, Field(
     description="Creation date of the order",
     example="2023-05-01T00:00:00",
 )]
-
-user_id_type = Annotated[str, Field(
-    description="user ID(owner) in db",
-    example="2dg3f4g5h6j7k8l9",
+case_id_type = Annotated[str, Field(
+    example="60b6d8b3e3f4f3b3f0a3f3b3",
+    title="Case ID",
+    description="ID of the case in the database",
 )]
-
-class AddCase(BaseModel):
+class Case(BaseModel):
     first_name: name_type
     last_name: name_type
     email: email_type
-    Category: Category_type
+    category: str
+    status: str
     created_date: creation_date_type
-    user_id: user_id_type = 0
 
+
+class CaseOut(Case):
+    case_id: case_id_type
 
